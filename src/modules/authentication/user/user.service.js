@@ -11,16 +11,17 @@ const UserSchema = z.object({
 });
 
 export async function createUser(data) {
-  const result = UserSchema.safeParse(data);
+  const result = UserSchema.safeParse(data); // ✅ Validation des données
 
   if (result.success) {
-    const age = calculateAge(result.data.birthday);
+    const age = calculateAge(result.data.birthday); // ✅ Calcul de l'âge
 
     if (age < MAX_USER_AGE) {
-      throw new HttpForbidden("User is too young.");
+      throw new HttpForbidden("User is too young."); // ❌ Interdit si trop jeune
     }
-    return createUserInRepository(result.data);
+
+    return createUserInRepository(result.data); // ✅ OK → insertion simulée
   } else {
-    throw new HttpBadRequest(result.error);
+    throw new HttpBadRequest(result.error); // ❌ Mauvaise requête si validation échoue
   }
 }
